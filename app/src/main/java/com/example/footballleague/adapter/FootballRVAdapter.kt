@@ -1,6 +1,5 @@
 package com.example.footballleague.adapter
 
-import android.text.Layout
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +7,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.footballleague.model.FootballTeamsModel
+import com.example.footballleague.model.leagues.Leagues
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.*
 
-class FootballRVAdapter(val items:List<FootballTeamsModel>,private val listener:(FootballTeamsModel)->Unit):
+class FootballRVAdapter(val items:List<Leagues>, private val listener:(Leagues)->Unit):
     RecyclerView.Adapter<FootballRVAdapter.ViewHolder>() {
     companion object{
         val idGambar = 1
@@ -45,9 +44,10 @@ class FootballRVAdapter(val items:List<FootballTeamsModel>,private val listener:
     class ViewHolder(val view: View):RecyclerView.ViewHolder(view){
         val namaLeague = itemView.findViewById<TextView>(idNama)
         val gambarLeague = itemView.findViewById<ImageView>(idGambar)
-        fun bindItem(items:FootballTeamsModel,listener: (FootballTeamsModel) -> Unit){
-            namaLeague.text = items.namaLeague
-            items.gambarLeague?.let { Picasso.get().load(it).fit().into(gambarLeague) }
+        fun bindItem(items: Leagues, listener: (Leagues) -> Unit){
+            namaLeague.text = items.strLeague
+//            items.strBadge?.let { Picasso.get().load(it).fit().into(gambarLeague) }
+            Picasso.get().load(items.strBadge).into(gambarLeague)
             itemView.setOnClickListener { listener(items) }
         }
     }

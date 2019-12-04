@@ -2,42 +2,51 @@ package com.example.footballleague
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.footballleague.adapter.FootballRVAdapter
-import com.example.footballleague.model.FootballTeamsModel
+import com.example.footballleague.api.ApiMainService
+import com.example.footballleague.model.leagues.Leagues
+import com.example.footballleague.model.leagues.LeaguesResponses
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import retrofit2.Call
+import retrofit2.Response
+import javax.security.auth.callback.Callback
 
 class MainActivity : AppCompatActivity() {
-    private var items: MutableList<FootballTeamsModel> = mutableListOf()
+    private var items: ArrayList<Leagues> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initData()
         verticalLayout {
             recyclerView {
                 layoutManager = GridLayoutManager(context,2)
                 addItemDecoration(DividerItemDecoration(context,1))
-                adapter = FootballRVAdapter(items){
-                    startActivity<DetailActivity>("ITEM" to it)
-                }
+                ApiMainService().service.getLeagues().enqueue(object : retrofit2.Callback<LeaguesResponses>{
+                    override fun onFailure(call: Call<LeaguesResponses>, t: Throwable) {
+                        Log.d("GAGAL","GAGAL Mengambil Leagues")
+                    }
+
+                    override fun onResponse(
+                        call: Call<LeaguesResponses>,
+                        response: Response<LeaguesResponses>
+                    ) {
+                        if (response.code() == 200){
+                            response.body()?.leagues?.let { items.addAll(it) }
+                            adapter = FootballRVAdapter(items){
+                                startActivity<DetailActivity>("ITEM" to it)
+                            }
+                        }
+                        Log.d("BERHASIL","BERHASIL")
+
+                    }
+
+
+                })
             }.lparams(height= matchParent,width = wrapContent)
         }
     }
 
-    private fun initData(){
-        val gambarLeague = resources.obtainTypedArray(R.array.gambar_league)
-        val namaLeague = resources.getStringArray(R.array.nama_league)
-        val deskripsiLeague = resources.getStringArray(R.array.deskripsi_league)
-        items.clear()
-        for (i in namaLeague.indices) {
-            items.add(FootballTeamsModel(namaLeague[i],
-                deskripsiLeague[i],
-                gambarLeague.getResourceId(i,0)))
-        }
-//        Type array perlu di recylce
-        gambarLeague.recycle()
-    }
 }

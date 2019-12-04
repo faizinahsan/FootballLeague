@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.footballleague.model.FootballTeamsModel
+import com.example.footballleague.model.leagues.Leagues
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.nestedScrollView
@@ -45,10 +45,10 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
         }
-        val item = intent.getParcelableExtra<FootballTeamsModel>("ITEM")
-        namaLeagueTV.text = item.namaLeague.toString()
-        deskripsiLeagueTV.text = item.deskripsiLeague.toString()
-        item.gambarLeague?.let { Picasso.get().load(it).into(gambarLeagueTV) }
+        val item = intent.getParcelableExtra<Leagues>("ITEM")
+        namaLeagueTV.text = item.strLeague.toString()
+        deskripsiLeagueTV.text = item.strDescriptionEN.toString()
+        item.strBadge?.let { Picasso.get().load(it).into(gambarLeagueTV) }
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
