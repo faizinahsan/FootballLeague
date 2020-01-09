@@ -7,48 +7,22 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.footballleague.model.leagues.Leagues
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.detail_activity.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.nestedScrollView
 
 class DetailActivity : AppCompatActivity() {
-    companion object{
-        val idGambarLeague = 1
-        val idNamaLeague = 2
-        val idDeskripsiLeague = 3
-    }
-    lateinit var namaLeagueTV : TextView
-    lateinit var deskripsiLeagueTV : TextView
-    lateinit var gambarLeagueTV : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        nestedScrollView {
-            verticalLayout {
-                gravity = Gravity.CENTER_HORIZONTAL
-                gambarLeagueTV = imageView {
-                    id = com.example.footballleague.DetailActivity.Companion.idGambarLeague
-                }.lparams {
-                    width = 300
-                    height = 400
-                }
-                namaLeagueTV=textView {
-                    id = com.example.footballleague.DetailActivity.Companion.idNamaLeague
-                    textSize = 45f
-                }.lparams{
-                    margin = dip(16)
-                }
-                deskripsiLeagueTV=textView {
-                    id = com.example.footballleague.DetailActivity.Companion.idDeskripsiLeague
-                }.lparams{
-                    margin = dip(16)
-                }
-            }
-        }
-        val item = intent.getParcelableExtra<Leagues>("ITEM")
-        namaLeagueTV.text = item.strLeague.toString()
-        deskripsiLeagueTV.text = item.strDescriptionEN.toString()
-        item.strBadge?.let { Picasso.get().load(it).into(gambarLeagueTV) }
+        setContentView(R.layout.detail_activity)
+        val league_name = intent.getStringExtra("leagues_name")
+        val league_desc= intent.getStringExtra("leagues_desc")
+        val league_image = intent.getStringExtra("leagues_image")
+        id_nama_liga_detail.text = league_name
+        id_desc_liga_detail.text = league_desc
+        Picasso.get().load(league_image).into(id_gambar_liga_detail)
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
